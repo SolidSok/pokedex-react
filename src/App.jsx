@@ -8,11 +8,10 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const url = 'https://pokeapi.co/api/v2/pokemon/?limit=30';
 
-  const pokeLoad = async () => {
-    setLoading(true);
-    const res = await axios.get(url);
-    getPokemon(res.data.name);
-    setLoading(false);
+  const pokeLoad = () => {
+    axios.get(url).then(res => {
+      getPokemon(res.data.results);
+    });
   };
   const getPokemon = async res => {
     res.map(async item => {
@@ -27,16 +26,17 @@ const App = () => {
   useEffect(() => {
     pokeLoad();
   }, [url]);
+  console.log(pokemonList);
 
   return (
     <>
-      {loading ? (
+      {/* {loading ? (
         <h1>loading...</h1>
-      ) : (
-        <div>
-          <PokemonList pokemonList={pokemonList} loading={loading} />
-        </div>
-      )}
+      ) : ( */}
+      <div>
+        <PokemonList pokemonList={pokemonList} loading={loading} />
+      </div>
+      {/* )} */}
     </>
   );
 };

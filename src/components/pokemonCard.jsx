@@ -10,10 +10,11 @@ export function PokemonCard(props) {
           className="pokemonPoster"
           variant="top"
           crossOrigin="anonymous"
-          src={pokemon.ImagePath}
+          src={pokemon.sprites.front_default}
         />
 
         <Card.Body>
+          {pokemon.id}
           <Card.Title>{pokemon.name}</Card.Title>
         </Card.Body>
       </Card>
