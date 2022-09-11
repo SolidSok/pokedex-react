@@ -1,16 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import { PokeNav } from './components/navbar';
-import { PokemonList } from './components/pokemonList';
-
+import { PokemonCard } from './components/pokemonCard';
+import { PokemonView } from './components/pokemonView';
 const App = () => {
   const [pokemonList, setPokemonList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [nextUrl, setNextUrl] = useState();
   const [prevUrl, setPrevUrl] = useState();
-  const [url, setUrl] = useState('https://pokeapi.co/api/v2/pokemon/?limit=30');
+  const [url, setUrl] = useState('https://pokeapi.co/api/v2/pokemon/?limit=32');
 
   const pokeLoad = async () => {
     setLoading(true);
@@ -35,36 +36,48 @@ const App = () => {
   }, [url]);
 
   return (
-    <Container fluid>
-      {' '}
-      <PokeNav />
-      <Row>
-        <div className="prev-next">
-          {prevUrl && (
-            <Button
-              onClick={() => {
-                setPokemonList([]);
-                setUrl(prevUrl);
-              }}>
-              Previous
-            </Button>
-          )}
-          {nextUrl && (
-            <Button
-              onClick={() => {
-                setPokemonList([]);
-                setUrl(nextUrl);
-              }}>
-              Next
-            </Button>
-          )}
-        </div>
-      </Row>
-      <Row>
+    <Router>
+      <Container fluid>
         {' '}
-        <PokemonList pokemonList={pokemonList} loading={loading} />
-      </Row>
-    </Container>
+        <PokeNav
+          setPokemonList={setPokemonList}
+          setUrl={setUrl}
+          nextUrl={nextUrl}
+          prevUrl={prevUrl}
+        />
+        <Row>
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return loading ? (
+                <h1 className="loading">Loading...</h1>
+              ) : (
+                pokemonList.map(p => (
+                  <Col md={6} lg={4} xl={3} key={p.name}>
+                    <PokemonCard pokemon={p} />
+                  </Col>
+                ))
+              );
+            }}
+          />
+          <Route
+            path="/:name"
+            render={({ match, history }) => {
+              return (
+                <PokemonView
+                  pokemonList={pokemonList}
+                  pokemon={pokemonList.find(
+                    pokemon => pokemon.name === match.params.name
+                  )}
+                  onBackClick={() => history.goBack()}
+                />
+              );
+            }}
+          />
+        </Row>
+      </Container>
+    </Router>
   );
 };
 
