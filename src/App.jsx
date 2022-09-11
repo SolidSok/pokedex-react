@@ -1,17 +1,24 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Container, Row, Button } from 'react-bootstrap';
 import './App.css';
+import { PokeNav } from './components/navbar';
 import { PokemonList } from './components/pokemonList';
 
 const App = () => {
   const [pokemonList, setPokemonList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const url = 'https://pokeapi.co/api/v2/pokemon/?limit=30';
+  const [nextUrl, setNextUrl] = useState();
+  const [prevUrl, setPrevUrl] = useState();
+  const [url, setUrl] = useState('https://pokeapi.co/api/v2/pokemon/?limit=30');
 
-  const pokeLoad = () => {
-    axios.get(url).then(res => {
-      getPokemon(res.data.results);
-    });
+  const pokeLoad = async () => {
+    setLoading(true);
+    const res = await axios.get(url);
+    setNextUrl(res.data.next);
+    setPrevUrl(res.data.previous);
+    getPokemon(res.data.results);
+    setLoading(false);
   };
   const getPokemon = async res => {
     res.map(async item => {
@@ -26,18 +33,38 @@ const App = () => {
   useEffect(() => {
     pokeLoad();
   }, [url]);
-  console.log(pokemonList);
 
   return (
-    <>
-      {/* {loading ? (
-        <h1>loading...</h1>
-      ) : ( */}
-      <div>
+    <Container fluid>
+      {' '}
+      <PokeNav />
+      <Row>
+        <div className="prev-next">
+          {prevUrl && (
+            <Button
+              onClick={() => {
+                setPokemonList([]);
+                setUrl(prevUrl);
+              }}>
+              Previous
+            </Button>
+          )}
+          {nextUrl && (
+            <Button
+              onClick={() => {
+                setPokemonList([]);
+                setUrl(nextUrl);
+              }}>
+              Next
+            </Button>
+          )}
+        </div>
+      </Row>
+      <Row>
+        {' '}
         <PokemonList pokemonList={pokemonList} loading={loading} />
-      </div>
-      {/* )} */}
-    </>
+      </Row>
+    </Container>
   );
 };
 

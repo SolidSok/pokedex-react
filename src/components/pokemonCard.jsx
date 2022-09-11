@@ -10,12 +10,14 @@ export function PokemonCard(props) {
           className="pokemonPoster"
           variant="top"
           crossOrigin="anonymous"
-          src={pokemon.sprites.front_default}
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg`}
         />
 
         <Card.Body>
-          {pokemon.id}
-          <Card.Title>{pokemon.name}</Card.Title>
+          <Card.Title>
+            {' '}
+            #{pokemon.id} {pokemon.name}
+          </Card.Title>
         </Card.Body>
       </Card>
     </Col>
