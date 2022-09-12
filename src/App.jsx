@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
-import { PokeNav } from './components/navbar';
+import { PokeNav } from './components/pokeNav';
 import { PokemonCard } from './components/pokemonCard';
 import { PokemonView } from './components/pokemonView';
 const App = () => {
@@ -12,6 +12,7 @@ const App = () => {
   const [nextUrl, setNextUrl] = useState();
   const [prevUrl, setPrevUrl] = useState();
   const [url, setUrl] = useState('https://pokeapi.co/api/v2/pokemon/?limit=32');
+  const [filter, setFilter] = useState('');
 
   const pokeLoad = async () => {
     setLoading(true);
@@ -32,8 +33,15 @@ const App = () => {
     });
   };
   useEffect(() => {
-    pokeLoad();
-  }, [url]);
+    pokeLoad([]);
+  }, []);
+
+  let filteredPokemon = pokemonList;
+  if (filter !== '') {
+    filteredPokemon = pokemonList.filter(p =>
+      p.name.toLowerCase().includes(filter.toLocaleLowerCase())
+    );
+  }
 
   return (
     <Router>
@@ -44,6 +52,8 @@ const App = () => {
           setUrl={setUrl}
           nextUrl={nextUrl}
           prevUrl={prevUrl}
+          setFilter={setFilter}
+          filter={filter}
         />
         <Row>
           <Route
@@ -53,7 +63,7 @@ const App = () => {
               return loading ? (
                 <h1 className="loading">Loading...</h1>
               ) : (
-                pokemonList.map(p => (
+                filteredPokemon.map(p => (
                   <Col md={6} lg={4} xl={3} key={p.name}>
                     <PokemonCard pokemon={p} />
                   </Col>

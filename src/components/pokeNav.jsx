@@ -1,7 +1,14 @@
 import React from 'react';
-import { Navbar, Container, Nav, Button } from 'react-bootstrap';
+import { Navbar, Container, Nav, Button, Form } from 'react-bootstrap';
 
-export const PokeNav = ({ nextUrl, prevUrl, setUrl, setPokemonList }) => {
+export const PokeNav = ({
+  nextUrl,
+  prevUrl,
+  setUrl,
+  setPokemonList,
+  setFilter,
+  filter,
+}) => {
   return (
     <Navbar className="nav" sticky="top" bg="dark" expand="lg" variant="dark">
       {' '}
@@ -30,6 +37,13 @@ export const PokeNav = ({ nextUrl, prevUrl, setUrl, setPokemonList }) => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ml-auto"></Nav>
+          <Form.Control
+            onChange={e => {
+              setFilter(e.target.value);
+            }}
+            value={filter}
+            placeholder="Find your Pokemon"
+          />
         </Navbar.Collapse>
       </Container>
     </Navbar>
