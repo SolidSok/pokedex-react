@@ -22,7 +22,7 @@ export const PokeNav = ({
               setPokemonList([]);
               setUrl(prevUrl);
             }}>
-            Previous
+            Previous 32
           </Button>
         )}
         {nextUrl && (
@@ -31,7 +31,7 @@ export const PokeNav = ({
               setPokemonList([]);
               setUrl(nextUrl);
             }}>
-            Next
+            Next 32
           </Button>
         )}
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
