@@ -14,7 +14,7 @@ const App = () => {
   const [url, setUrl] = useState('https://pokeapi.co/api/v2/pokemon/?limit=32');
   const [filter, setFilter] = useState('');
 
-  const pokeLoad = async url => {
+  const pokeLoad = async () => {
     setLoading(true);
     const res = await axios.get(url);
     setNextUrl(res.data.next);
